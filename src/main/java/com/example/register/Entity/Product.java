@@ -1,15 +1,14 @@
 package com.example.register.Entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.register.AllSecurity.Entity.Utilisateur;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,7 +25,14 @@ public class Product {
     private BigDecimal price;
     private int inventory;
     private String description;
+    private String category;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Utilisateur user;
 
 
 
@@ -38,4 +44,27 @@ public class Product {
         this.description = description;
 
     }
+
+
+    public Product(String name, String brand, BigDecimal price, int inventory, String description,  String category) {
+        this.name = name;
+        this.brand = brand;
+        this.price = price;
+        this.inventory = inventory;
+        this.description = description;
+        this.category = category;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }

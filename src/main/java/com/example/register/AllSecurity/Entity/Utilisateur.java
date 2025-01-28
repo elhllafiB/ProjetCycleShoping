@@ -2,7 +2,9 @@ package com.example.register.AllSecurity.Entity;
 
 
 import com.example.register.Entity.Cart;
+import com.example.register.Entity.Product;
 import com.example.register.Entity.Uorder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,29 +35,20 @@ public class Utilisateur implements UserDetails {
     private String email;
     //verifier si le compte est actif ou pas
     private boolean actif = false;
-
     @OneToOne(cascade = CascadeType.ALL)
     private  Role role;
-
     //chaque utilisateur peut avoir plusieur token (session)
     @OneToMany(mappedBy = "utilisateur")
     private List<JwtT> tokens;
-
-
     @OneToMany(mappedBy = "utilisateur")
     private List<ValisationUpdatePassword> valisationUpdatePassword;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Uorder> orders;
-
-
-
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
-
-
-
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products;
 
 
 
