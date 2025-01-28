@@ -26,5 +26,6 @@ public class ProductDTO {
     private int inventory;
     private String description;
 
-    private List<Image> images;
+   private List<Image> images;
+
 }

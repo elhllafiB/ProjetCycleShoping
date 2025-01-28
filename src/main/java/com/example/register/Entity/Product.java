@@ -2,6 +2,7 @@ package com.example.register.Entity;
 
 
 import com.example.register.AllSecurity.Entity.Utilisateur;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,9 +28,11 @@ public class Product {
     private String description;
     private String category;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Utilisateur user;

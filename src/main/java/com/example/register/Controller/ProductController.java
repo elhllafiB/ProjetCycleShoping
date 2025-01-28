@@ -4,6 +4,7 @@ import com.example.register.AllSecurity.Entity.Utilisateur;
 import com.example.register.AllSecurity.Repository.UtilisateurRepository;
 import com.example.register.AllSecurity.Service.JwtService;
 import com.example.register.DTO.ProductDTO;
+import com.example.register.DTO.ProductDto2;
 import com.example.register.Entity.Product;
 import com.example.register.Mapper.ProductMapper;
 import com.example.register.Request.AddProductRequest;
@@ -50,10 +51,24 @@ public class ProductController {
         }
     }
 
+//    @GetMapping("/product/getbyuser2")
+//    public List<ProductDto2>  getProductByUser2(HttpServletRequest request){
+//
+//        try{
+//            int userId = this.jwtService.UserId(request);
+//            return productService.getProductByUserId2(userId);
+//
+//        }catch (Exception e){
+//            throw new RuntimeException(e);
+//
+//        }
+//    }
 
 
 
-   @GetMapping("/product/getbyuser")
+
+
+    @GetMapping("/product/getbyuser")
     public List<ProductDTO>  getProductByUser(HttpServletRequest request){
 
         try{

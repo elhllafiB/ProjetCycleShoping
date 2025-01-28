@@ -68,6 +68,9 @@ public class ConfigurationSecurity {
                                         .requestMatchers("/product/update/{productId}").permitAll()
                                         .requestMatchers("/Item/{cartId}").permitAll()
                                         .requestMatchers("/{cartId}/my-cart").permitAll()
+                                        .requestMatchers("/api/v1/images/image/delete/{id}").permitAll()
+                                        .requestMatchers("Image/upload").permitAll()
+                                        .requestMatchers("/api/v1/images/image/download/{id}").permitAll()
                                         .requestMatchers("/{cartId}/delet").permitAll()
                                         .requestMatchers("/{cartId}/cart/total-price").permitAll()
 

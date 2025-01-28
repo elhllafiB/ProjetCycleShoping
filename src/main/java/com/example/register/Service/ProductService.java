@@ -3,9 +3,11 @@ package com.example.register.Service;
 import com.example.register.AllSecurity.Entity.Utilisateur;
 import com.example.register.DTO.ProductDTO;
 
+import com.example.register.DTO.ProductDto2;
 import com.example.register.Entity.Product;
 import com.example.register.Mapper.ProductMapper;
 
+import com.example.register.Mapper.ProductMapper2;
 import com.example.register.Repository.ProductRepository;
 import com.example.register.Request.AddProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,22 @@ public class ProductService {
     private ProductRepository productRepository;
     @Autowired
     private ProductMapper productMapper;
+    @Autowired
+    private ProductMapper2 productMapper2;
+
+
+    public List<ProductDto2> getProductByUserId2(int userId) throws Exception {
+        List<Product> products = productRepository.findByUserId(userId);
+
+        if (products.isEmpty()) {
+            throw new Exception("No products found for the user");
+        }
+
+        // Utiliser le mapper pour convertir la liste
+        return productMapper2.toDtoList(products);
+    }
+
+
 
 
     public Product getProductById(Long productId) {
