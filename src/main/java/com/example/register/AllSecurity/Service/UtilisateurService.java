@@ -80,7 +80,7 @@ public class UtilisateurService  implements UserDetailsService {
        // puis enregistre l utilisateur dans la base de donne avec un mot de passe crypter
 
         Role userRole = new Role();
-        userRole.setLibelle(TypeRole.Administrateur);
+        userRole.setLibelle(TypeRole.utilisateur);
         utilisateur.setRole(userRole);
         utilisateur=   utilisateurRepository.save(utilisateur);
         //lorsqu on enregistre un utilisateur on appel la methode de registre dont on genere un mot de passe de validation
