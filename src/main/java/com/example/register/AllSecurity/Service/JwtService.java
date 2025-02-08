@@ -110,8 +110,9 @@ public class JwtService {
         final long exprirationTime = currentTime + 60 * 60 * 1000;
 
         final Map<String, Object >  claims = Map.of(
-                "nom", utilisateur.getNom(),
+
                 "email", utilisateur.getEmail(),
+                "role", utilisateur.getRole(),
                 "id", utilisateur.getId(),
                 Claims.EXPIRATION , new Date(exprirationTime) ,
                 Claims.SUBJECT , utilisateur.getEmail()
@@ -140,13 +141,13 @@ public class JwtService {
 
 
 
-    private <T> T getClaims(String token, Function<Claims,T> function ){
+    public  <T> T getClaims(String token, Function<Claims,T> function ){
         Claims claims = getAllClaims(token);
         return function.apply(claims);
     }
 
 
-    private Claims getAllClaims(String token) {
+    public Claims getAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(this.getkey()) // La clé utilisée pour signer le JWT
                 .build()

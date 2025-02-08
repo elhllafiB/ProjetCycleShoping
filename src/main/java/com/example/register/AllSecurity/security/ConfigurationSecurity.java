@@ -73,7 +73,7 @@ public class ConfigurationSecurity {
                                         .requestMatchers("/api/v1/images/image/download/{id}").permitAll()
                                         .requestMatchers("/{cartId}/delet").permitAll()
                                         .requestMatchers("/{cartId}/cart/total-price").permitAll()
-
+                                        .requestMatchers("/product/Allproduct").permitAll()
                                         .requestMatchers("/myOrder/{userId}").permitAll()
                                         .anyRequest().authenticated()// mais les autre url necessite une authetification
                 )

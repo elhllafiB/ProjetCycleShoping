@@ -82,6 +82,20 @@ public class ProductController {
    }
 
 
+    @GetMapping("/product/Allproduct")
+    public List<Product>  getAllproduct(HttpServletRequest request){
+
+        try{
+
+            return productService.getAllProduct();
+
+        }catch (Exception e){
+            throw new RuntimeException(e);
+
+        }
+    }
+
+
    @GetMapping("/product/delet/{id}")
     public void deleteProduct(@PathVariable Long id){
 

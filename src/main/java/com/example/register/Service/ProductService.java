@@ -29,6 +29,17 @@ public class ProductService {
     private ProductMapper2 productMapper2;
 
 
+    public List<Product> getAllProduct() throws Exception{
+        List<Product> products = productRepository.findAll();
+        if (products.isEmpty()) {
+            throw new Exception("No products found for the user");
+        }
+        return products ;
+
+    }
+
+
+
     public List<ProductDto2> getProductByUserId2(int userId) throws Exception {
         List<Product> products = productRepository.findByUserId(userId);
 

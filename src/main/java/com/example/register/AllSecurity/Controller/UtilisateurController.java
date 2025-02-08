@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -58,24 +59,47 @@ public class UtilisateurController {
 
 
     // on return une chaine de char qui sera le token et la valeur du token
-    @PostMapping("login")
-    public Map<String , String > login(@RequestBody AuthentificationDto authentificationDto) {
+//    @PostMapping("login")
+//    public Map<String , String > login(@RequestBody AuthentificationDto authentificationDto) {
+//
+//        //La méthode authenticate() permet de vérifier si les informations d'authentification fournies sont correctes.
+//     final Authentication Authenticate =  authenticationManager.authenticate(
+//                   new UsernamePasswordAuthenticationToken(authentificationDto.email(), authentificationDto.password())
+//        );
+//
+//     if(Authenticate.isAuthenticated()) {
+//        return  this.jwtService.generateToken(authentificationDto.email());
+//     }
+//
+//
+//
+//     return null;
+//    }
 
-        //La méthode authenticate() permet de vérifier si les informations d'authentification fournies sont correctes.
-     final Authentication Authenticate =  authenticationManager.authenticate(
-                   new UsernamePasswordAuthenticationToken(authentificationDto.email(), authentificationDto.password())
+
+
+    @PostMapping("login")
+    public Map<String, String> login(@RequestBody AuthentificationDto authentificationDto) {
+        // Authentification de l'utilisateur
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authentificationDto.email(), authentificationDto.password())
         );
 
-     if(Authenticate.isAuthenticated()) {
-        return  this.jwtService.generateToken(authentificationDto.email());
-     }
+        if (authentication.isAuthenticated()) {
+            // Générer le token et récupérer le rôle
+           Map<String, String> jwtMap = new HashMap<>(this.jwtService.generateToken(authentificationDto.email()));
 
 
+            // Ajouter le rôle dans la réponse
+            String token = jwtMap.get("bearer");
+            String role = this.jwtService.getClaims(token, claims -> claims.get("role").toString());
 
-     return null;
+            jwtMap.put("role", role);
+            return jwtMap;
+        }
 
+        return null;
     }
-
 
 
 //   @PostMapping("deconnecter")
