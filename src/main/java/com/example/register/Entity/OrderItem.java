@@ -1,7 +1,6 @@
 package com.example.register.Entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,13 +24,13 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
-    private Uorder order;
+    private Client_Order order;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public OrderItem(Uorder order, Product product, int quantity, BigDecimal price) {
+    public OrderItem(Client_Order order, Product product, int quantity, BigDecimal price) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;

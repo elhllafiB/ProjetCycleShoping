@@ -4,7 +4,7 @@ package com.example.register.Service;
 import com.example.register.Entity.Cart;
 import com.example.register.Entity.OrderItem;
 import com.example.register.Entity.Product;
-import com.example.register.Entity.Uorder;
+import com.example.register.Entity.Client_Order;
 import com.example.register.Repository.OrderRepository;
 import com.example.register.Repository.ProductRepository;
 import com.example.register.enums.OrderStatus;
@@ -33,13 +33,13 @@ public class OrderService {
 
     @Transactional
 
-    public Uorder placeOrder(int userId) {
+    public Client_Order placeOrder(int userId) {
         Cart cart   = cartService.getCartByUserId(userId);
-        Uorder order = createOrder(cart);
+        Client_Order order = createOrder(cart);
         List<OrderItem> orderItemList = createOrderItems(order, cart);
         order.setOrderItems(new HashSet<>(orderItemList));
         order.setTotalAmount(calculateTotalAmount(orderItemList));
-        Uorder savedOrder = orderRepository.save(order);
+        Client_Order savedOrder = orderRepository.save(order);
       //  cartService.clearCart(cart.getId());
         return savedOrder;
     }
@@ -47,8 +47,8 @@ public class OrderService {
 
 
 
-    private Uorder createOrder(Cart cart) {
-        Uorder order = new Uorder();
+    private Client_Order createOrder(Cart cart) {
+        Client_Order order = new Client_Order();
         order.setUser(cart.getUser());
         order.setOrderStatus(OrderStatus.PENDING);
         order.setOrderDate(LocalDate.now());
@@ -56,7 +56,7 @@ public class OrderService {
     }
 
 
-    private List<OrderItem> createOrderItems(Uorder order, Cart cart) {
+    private List<OrderItem> createOrderItems(Client_Order order, Cart cart) {
         return  cart.getItems().stream().map(cartItem -> {
             Product product = cartItem.getProduct();
             product.setInventory(product.getInventory() - cartItem.getQuantity());

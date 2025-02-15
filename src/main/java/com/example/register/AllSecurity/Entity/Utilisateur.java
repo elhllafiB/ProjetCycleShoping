@@ -3,7 +3,7 @@ package com.example.register.AllSecurity.Entity;
 
 import com.example.register.Entity.Cart;
 import com.example.register.Entity.Product;
-import com.example.register.Entity.Uorder;
+import com.example.register.Entity.Client_Order;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -43,7 +43,7 @@ public class Utilisateur implements UserDetails {
     @OneToMany(mappedBy = "utilisateur")
     private List<ValisationUpdatePassword> valisationUpdatePassword;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Uorder> orders;
+    private List<Client_Order> orders;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
     @JsonIgnore
