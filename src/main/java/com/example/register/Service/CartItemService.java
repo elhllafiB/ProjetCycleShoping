@@ -11,8 +11,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Comparator;
 
 import java.math.BigDecimal;
+import java.util.Optional;  // Ajoutez cette ligne en haut de votre fichier
 
 @Service
 @AllArgsConstructor
@@ -177,28 +179,45 @@ public class CartItemService {
 
 
     //pas encore tester cette methode ??!!!!!
-    public void updateItemQuantity(Long cartId, Long productId, int quantity) {
+//    public void updateItemQuantity(Long cartId, Long productId, int quantity) {
+//
+//        Cart cart = cartService.getCart(cartId);
+//        Product product = productService.getProductById(productId);
+//
+//
+//        cart.getItems().stream()
+//                .filter(item -> item.getProduct().getId().equals(productId))
+//                .findFirst()
+//                .ifPresent(item -> {
+//                    item.setQuantity(quantity);
+//                    item.setUnitPrice(product.getPrice());
+//                    item.setTotalPrice();
+//                    cartItemRepository.save(item);
+//                });
+//        BigDecimal totalAmount = cart.getTotalAmount();
+//        cart.setTotalAmount(totalAmount );
+//        cartRepository.save(cart);
+//
+//
+//
+//
+//    }
 
-        Cart cart = cartService.getCart(cartId);
-        Product product = productService.getProductById(productId);
+    public boolean updateItemQuantity(Long cartId, Long productId, Integer quantity) {
+        Optional<CartItem> cartItem = cartItemRepository.findByCartIdAndProductId(cartId, productId);
 
+        if (cartItem.isPresent()) {
+            CartItem item = cartItem.get();
+            item.setQuantity(quantity); // Met à jour la quantité
+            cartItemRepository.save(item);
+            return true;
+        }
 
-        cart.getItems().stream()
-                .filter(item -> item.getProduct().getId().equals(productId))
-                .findFirst()
-                .ifPresent(item -> {
-                    item.setQuantity(quantity);
-                    item.setUnitPrice(product.getPrice());
-                    item.setTotalPrice();
-                    cartItemRepository.save(item);
-                });
-        BigDecimal totalAmount = cart.getTotalAmount();
-        cart.setTotalAmount(totalAmount );
-        cartRepository.save(cart);
+        return false; // Si l'élément n'est pas trouvé dans le panier
+    }
 
-
-
-
+    public Optional<CartItem> findByCartIdAndProductId(Long cartId, Long productId) {
+        return cartItemRepository.findByCartIdAndProductId(cartId, productId);
     }
 
 
@@ -210,6 +229,7 @@ public class CartItemService {
         Cart cart = cartService.getCart(cartId);
         CartItem cartItem= cart.getItems()
                 .stream()
+                .sorted(Comparator.comparing(CartItem::getId).reversed())
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst()
                 .orElseThrow(()->new RuntimeException("Item Not Found"));
@@ -220,6 +240,9 @@ public class CartItemService {
 
 
 
+    public void save(CartItem cartItem) {
+        cartItemRepository.save(cartItem);
+    }
 
 
 

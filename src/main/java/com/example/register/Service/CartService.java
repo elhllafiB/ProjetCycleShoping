@@ -7,9 +7,10 @@ import com.example.register.Repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.stream.Collectors;
+import java.util.Comparator;
 import java.math.BigDecimal;
-
+import com.example.register.Entity.CartItem;
 @Service
 
 public class CartService {
@@ -30,6 +31,7 @@ public class CartService {
         return cartRepository.save(cart);
 
     }
+
 
 
 

@@ -19,6 +19,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.List;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+
 
 @Configuration
 
@@ -41,48 +48,91 @@ public class ConfigurationSecurity {
 
 
 
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//
+//
+//
+//        return httpSecurity
+//                .csrf(AbstractHttpConfigurer::disable) //Désactive la protection CSRF (Cross-Site Request Forgery)
+//                .authorizeHttpRequests(
+//
+//                        authorize->
+//                                authorize
+//                                        .requestMatchers("/inscription").permitAll() //pas besoin d etre conncter /inscription
+//                                        .requestMatchers("/activation").permitAll()
+//                                        .requestMatchers("/login").permitAll()
+//                                         .requestMatchers("/hello").hasRole("Administrateur")
+//                                        .requestMatchers("/deconnection").permitAll()
+//                                        .requestMatchers("/UpdatePassword").permitAll()
+//                                        .requestMatchers("/newpassword").permitAll()
+////                                        .requestMatchers("/item/add/{cartId}").permitAll()
+//                                        .requestMatchers("/item/add", "/item/add/**").permitAll()
+//                                        .requestMatchers("/delete/{cartId}").permitAll()
+//                                        .requestMatchers("/update/{cartId}").permitAll()
+//                                        .requestMatchers("/product/getbyid/{id}").permitAll()
+//                                        .requestMatchers("/product/getbyuser/{id}").permitAll()
+//                                        .requestMatchers("/product/delet/{id}").permitAll()
+//                                        .requestMatchers("/product/add").authenticated()
+//                                        .requestMatchers("/product/update").permitAll()
+//                                        .requestMatchers("/product/update/{productId}").permitAll()
+//                                        .requestMatchers("/Item/{cartId}").permitAll()
+//                                        .requestMatchers("/{cartId}/my-cart").permitAll()
+//                                        .requestMatchers("/{cartId}/delet").permitAll()
+//                                        .requestMatchers("/{cartId}/cart/total-price").permitAll()
+//                                        .requestMatchers("/product/all").permitAll()
+//                                        .requestMatchers("/product/category/{category}").permitAll()
+//
+//                                        .requestMatchers("/myOrder/{userId}").permitAll()
+//                                        .anyRequest().authenticated()// mais les autre url necessite une authetification
+//                )
+//                .sessionManagement(httpSecuritySessionManagementConfigurer ->
+//                       httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//               .addFilterBefore(jwtFilter , UsernamePasswordAuthenticationFilter.class)   //sernamePasswordAuthenticationFilter est le filtre par défaut dans Spring Security qui gère l'authentification avec un nom d'utilisateur et un mot de passe (souvent sur /login).
+//                .build();
+//
+//    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
-
-
         return httpSecurity
-                .csrf(AbstractHttpConfigurer::disable) //Désactive la protection CSRF (Cross-Site Request Forgery)
-                .authorizeHttpRequests(
-
-                        authorize->
-                                authorize
-                                        .requestMatchers("/inscription").permitAll() //pas besoin d etre conncter /inscription
-                                        .requestMatchers("/activation").permitAll()
-                                        .requestMatchers("/login").permitAll()
-                                         .requestMatchers("/hello").hasRole("Administrateur")
-                                        .requestMatchers("/deconnection").permitAll()
-                                        .requestMatchers("/UpdatePassword").permitAll()
-                                        .requestMatchers("/newpassword").permitAll()
-                                        .requestMatchers("/item/add/{cartId}").permitAll()
-                                        .requestMatchers("/delete/{cartId}").permitAll()
-                                        .requestMatchers("/update/{cartId}").permitAll()
-                                        .requestMatchers("/product/getbyid/{id}").permitAll()
-                                        .requestMatchers("/product/getbyuser/{id}").permitAll()
-                                        .requestMatchers("/product/delet/{id}").permitAll()
-                                        .requestMatchers("/product/add").authenticated()
-                                        .requestMatchers("/product/update").permitAll()
-                                        .requestMatchers("/product/update/{productId}").permitAll()
-                                        .requestMatchers("/Item/{cartId}").permitAll()
-                                        .requestMatchers("/{cartId}/my-cart").permitAll()
-                                        .requestMatchers("/{cartId}/delet").permitAll()
-                                        .requestMatchers("/{cartId}/cart/total-price").permitAll()
-
-                                        .requestMatchers("/myOrder/{userId}").permitAll()
-                                        .anyRequest().authenticated()// mais les autre url necessite une authetification
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Active la configuration CORS
+                .csrf(AbstractHttpConfigurer::disable) // Désactive CSRF
+                .authorizeHttpRequests(authorize ->
+                        authorize
+                                .requestMatchers("/inscription").permitAll()
+                                .requestMatchers("/activation").permitAll()
+                                .requestMatchers("/login").permitAll()
+                                .requestMatchers("/hello").hasRole("Administrateur")
+                                .requestMatchers("/deconnection").permitAll()
+                                .requestMatchers("/UpdatePassword").permitAll()
+                                .requestMatchers("/newpassword").permitAll()
+                                .requestMatchers("/item/add", "/item/add/**").permitAll()
+//                                .requestMatchers("/item/delete/{productId}").permitAll()
+                                .requestMatchers("/delete/{cartId}").permitAll()
+                                .requestMatchers("/update/{cartId}").permitAll()
+                                .requestMatchers("/product/getbyid/{id}").permitAll()
+                                .requestMatchers("/product/getbyuser/{id}").permitAll()
+                                .requestMatchers("/product/delet/{id}").permitAll()
+                                .requestMatchers("/product/add").authenticated()
+                                .requestMatchers("/product/update").permitAll()
+                                .requestMatchers("/product/update/{productId}").permitAll()
+                                .requestMatchers("/Item/{cartId}").permitAll()
+                                .requestMatchers("/{cartId}/my-cart").permitAll()
+                                .requestMatchers("/{cartId}/delet").permitAll()
+                                .requestMatchers("/{cartId}/cart/total-price").permitAll()
+                                .requestMatchers("/product/all").permitAll()
+                                .requestMatchers("/product/category/{category}").permitAll()
+                                .requestMatchers("/myOrder/{userId}").permitAll()
+                                .requestMatchers("/my-cart").permitAll()
+                                .requestMatchers("/Item").permitAll()
+                                .requestMatchers("/item/update").permitAll()
+                                .anyRequest().authenticated()
                 )
-                .sessionManagement(httpSecuritySessionManagementConfigurer ->
-                       httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-               .addFilterBefore(jwtFilter , UsernamePasswordAuthenticationFilter.class)   //sernamePasswordAuthenticationFilter est le filtre par défaut dans Spring Security qui gère l'authentification avec un nom d'utilisateur et un mot de passe (souvent sur /login).
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-
     }
-
 
 
     /*
@@ -128,15 +178,31 @@ public class ConfigurationSecurity {
     }
 
 
-
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:4200");
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:4200")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Remplace par ton domaine en production
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true); // C'est ici que le problème est corrigé
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 

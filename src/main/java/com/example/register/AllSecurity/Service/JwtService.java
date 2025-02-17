@@ -110,7 +110,7 @@ public class JwtService {
         final long exprirationTime = currentTime + 60 * 60 * 1000;
 
         final Map<String, Object >  claims = Map.of(
-                "nom", utilisateur.getNom(),
+                "role", utilisateur.getRole(),
                 "email", utilisateur.getEmail(),
                 "id", utilisateur.getId(),
                 Claims.EXPIRATION , new Date(exprirationTime) ,

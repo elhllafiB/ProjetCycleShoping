@@ -20,7 +20,7 @@ public class JwtT {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-
+    @Lob
     private String token;
     private boolean loggeout;
 

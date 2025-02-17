@@ -1,6 +1,6 @@
 package com.example.register.AllSecurity.Controller;
 
-import java.util.HashMap;
+import com.example.register.AllSecurity.Dto.UtilisateurDto;
 import com.example.register.AllSecurity.Dto.AuthentificationDto;
 import com.example.register.AllSecurity.Entity.Utilisateur;
 import com.example.register.AllSecurity.Service.JwtService;
@@ -12,15 +12,20 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import com.example.register.AllSecurity.Repository.UtilisateurRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-
-@CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
-//@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:4200") // Autorise Angular à faire des requêtes
 
 public class UtilisateurController {
 
@@ -33,16 +38,51 @@ public class UtilisateurController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-   @Autowired
-   private JwtService jwtService;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
+
+    @GetMapping("/profile")
+    public ResponseEntity<Object> profile(HttpServletRequest request) {
+        try {
+            int userId = this.jwtService.UserId(request);
+            Utilisateur user = utilisateurRepository.findById(userId).orElse(null);
+
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur non trouvé");
+            }
+
+            // Retourne seulement nom, prénom et email
+            UtilisateurDto UtilisateurDto = new UtilisateurDto(user.getNom(), user.getPrenom(), user.getEmail());
+
+            return ResponseEntity.ok(UtilisateurDto);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur introuvable");
+        }
+    }
 
 
+//    @GetMapping("/profile")
+//    public ResponseEntity<Object> profile (HttpServletRequest request) {
+//
+//        try {
+//            int userId = this.jwtService.UserId(request);
+//            Utilisateur user = utilisateurRepository.findById(userId).orElse(null);
+//
+//            return ResponseEntity.ok(user);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.status(NOT_FOUND).body("not found cart with id " );
+//        }
+//
+//
+//    }
 
 
     @PostMapping("inscription")
     public String inscription(@RequestBody Utilisateur utilisateur) {
         this.utilisateurService.Register(utilisateur);
-           return  "bien enregistrer";
+        return  "bien enregistrer";
 
 
     }
@@ -60,6 +100,25 @@ public class UtilisateurController {
 
 
     // on return une chaine de char qui sera le token et la valeur du token
+//    @PostMapping("login")
+//    public Map<String , String > login(@RequestBody AuthentificationDto authentificationDto) {
+//
+//        //La méthode authenticate() permet de vérifier si les informations d'authentification fournies sont correctes.
+//     final Authentication Authenticate =  authenticationManager.authenticate(
+//                   new UsernamePasswordAuthenticationToken(authentificationDto.email(), authentificationDto.password())
+//        );
+//
+//     if(Authenticate.isAuthenticated()) {
+//        return  this.jwtService.generateToken(authentificationDto.email());
+//     }
+//
+//
+//
+//     return null;
+//    }
+
+
+
     @PostMapping("login")
     public Map<String, String> login(@RequestBody AuthentificationDto authentificationDto) {
         // Authentification de l'utilisateur
@@ -84,7 +143,6 @@ public class UtilisateurController {
     }
 
 
-
 //   @PostMapping("deconnecter")
 //    public void deconnecter(HttpServletRequest request) {
 //        this.jwtService.deconnecter( request);
@@ -107,9 +165,3 @@ public class UtilisateurController {
 
 
 }
-
-
-
-
-
-

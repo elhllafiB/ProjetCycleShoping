@@ -25,6 +25,7 @@ public class CartItem {
     private BigDecimal totalPrice;
 
     @ManyToOne
+    //@JsonIgnore
     @JoinColumn(name = "product_id")
     private Product product;
 

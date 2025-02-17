@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -103,9 +104,17 @@ public class ProductService {
 
     }
 
+    public List<ProductDTO> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(productMapper::toDTO).collect(Collectors.toList());
+    }
 
-
-
+    public List<ProductDTO> getProductsByCategory(String category) {
+        List<Product> products = productRepository.findByCategory(category);
+        return products.stream()
+                .map(productMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 
 
 }

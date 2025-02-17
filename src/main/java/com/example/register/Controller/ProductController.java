@@ -26,6 +26,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @AllArgsConstructor
 @NoArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProductController {
 
     @Autowired
@@ -67,7 +68,7 @@ public class ProductController {
    }
 
 
-   @GetMapping("/product/delet/{id}")
+   @DeleteMapping("/product/delet/{id}")
     public void deleteProduct(@PathVariable Long id){
 
        try {
@@ -78,7 +79,7 @@ public class ProductController {
    }
 
 //
-   @GetMapping("/product/add")
+   @PostMapping("/product/add")
     public  ProductDTO addProduct(@RequestBody Product product , HttpServletRequest request){
 
 
@@ -118,8 +119,26 @@ public class ProductController {
 
 
 
+    @GetMapping("/product/all")
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        try {
+            List<ProductDTO> products = productService.getAllProducts();
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
 
+    @GetMapping("/product/category/{category}")
+    public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable String category) {
+        try {
+            List<ProductDTO> products = productService.getProductsByCategory(category);
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 
 

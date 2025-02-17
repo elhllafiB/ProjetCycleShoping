@@ -53,6 +53,7 @@ public class UtilisateurService  implements UserDetailsService {
 
 
 
+
     public void Register(Utilisateur utilisateur) {
 
 
@@ -70,14 +71,14 @@ public class UtilisateurService  implements UserDetailsService {
         Optional<Utilisateur> utilisateurOptional = this.utilisateurRepository.findByEmail(utilisateur.getEmail());
 
         if(utilisateurOptional.isPresent()){
-           throw new RuntimeException(" votre email exist");
-      }
+            throw new RuntimeException(" votre email exist");
+        }
 
         //cette ligne pour crypter le mot de passe ( 1234 => bla bla bla)
-       String mdpcrypte =  this.passwordEncoder.encode(utilisateur.getPassword());
-       //modifier le mot de passe de l utilisateur par le mot de passe crypter
-       utilisateur.setMdp(mdpcrypte);
-       // puis enregistre l utilisateur dans la base de donne avec un mot de passe crypter
+        String mdpcrypte =  this.passwordEncoder.encode(utilisateur.getPassword());
+        //modifier le mot de passe de l utilisateur par le mot de passe crypter
+        utilisateur.setMdp(mdpcrypte);
+        // puis enregistre l utilisateur dans la base de donne avec un mot de passe crypter
 
         Role userRole = new Role();
         userRole.setLibelle(TypeRole.utilisateur);
@@ -104,19 +105,19 @@ public class UtilisateurService  implements UserDetailsService {
 
 
     public void activation(Map<String, String> code) {
-       Validation validation = this.validationService.lireEnFonctionDucode(code.get("code"));
-       // si le code est expire => affiche message d erreur
-       if(Instant.now().isAfter(validation.getExpireTime())) {
-           throw new RuntimeException(" votre code a expire");
-       }
-       // on cherche l utilisateur par son code
-       Utilisateur utilisateuractivate = this.utilisateurRepository.findById(validation.getUtilisateur().getId()).orElseThrow(()->new RuntimeException(" utilisateur inconnue "));
-       //si on trouve l utilisateur    private boolean actif = false; =>   private boolean actif = true;
-       utilisateuractivate.setActif(true);
+        Validation validation = this.validationService.lireEnFonctionDucode(code.get("code"));
+        // si le code est expire => affiche message d erreur
+        if(Instant.now().isAfter(validation.getExpireTime())) {
+            throw new RuntimeException(" votre code a expire");
+        }
+        // on cherche l utilisateur par son code
+        Utilisateur utilisateuractivate = this.utilisateurRepository.findById(validation.getUtilisateur().getId()).orElseThrow(()->new RuntimeException(" utilisateur inconnue "));
+        //si on trouve l utilisateur    private boolean actif = false; =>   private boolean actif = true;
+        utilisateuractivate.setActif(true);
 
-       // enregistrer le changement dans la table de l utilisateur
+        // enregistrer le changement dans la table de l utilisateur
         this.utilisateurRepository.save(utilisateuractivate);
-       }
+    }
 
 
 
@@ -125,7 +126,7 @@ public class UtilisateurService  implements UserDetailsService {
 
 
 
-       // cette methode on a redefinie ( de l interface UserDetailsService )
+    // cette methode on a redefinie ( de l interface UserDetailsService )
     // le role de cette methode est de chercher un utilisateur de la base de donne en fonction de leur mot de passe
     @Override
     public Utilisateur loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -160,4 +161,3 @@ public class UtilisateurService  implements UserDetailsService {
 
     }
 }
-

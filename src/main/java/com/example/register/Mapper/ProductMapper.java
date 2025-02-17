@@ -25,6 +25,7 @@ public class ProductMapper {
         dto.setPrice(product.getPrice());
         dto.setInventory(product.getInventory());
         dto.setDescription(product.getDescription());
+        dto.setCategory(product.getCategory());
 
         dto.setImages(product.getImages());
         return dto;

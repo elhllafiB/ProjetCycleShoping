@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class Product {
     private String category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images;
+    private List<Image> images ;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
